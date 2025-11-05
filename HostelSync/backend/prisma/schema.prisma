@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  hostelId  Int?
+  roomNo    String?
+  complaints Complaint[]
+  bookings   TransportBooking[]
+  feedbacks  FoodFeedback[]
+  cleaningRequests CleaningRequest[]
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  STUDENT
+  WARDEN
+  STAFF
+  ADMIN
+}
+
+model MessMenu {
+  id       Int      @id @default(autoincrement())
+  day      String
+  mealType String
+  items    String
+}
+
+model FoodFeedback {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  rating    Int
+  comment   String?
+  date      DateTime @default(now())
+}
+
+model Complaint {
+  id           Int      @id @default(autoincrement())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
+  type         String   // 'food', 'internet', 'water', 'cleaning'
+  description  String
+  status       String   @default("PENDING")
+  location     String?
+  resolvedBy   Int?
+  createdAt    DateTime @default(now())
+}
+
+model Vehicle {
+  id       Int    @id @default(autoincrement())
+  type     String
+  route    String
+  capacity Int
+  driver   String
+  bookings TransportBooking[]
+}
+
+model TransportBooking {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+  vehicleId Int
+  status    String   @default("BOOKED")
+  date      DateTime @default(now())
+}
+
+model CleaningSchedule {
+  id       Int    @id @default(autoincrement())
+  block    String
+  day      String
+  staffId  Int?
+}
+
+model CleaningRequest {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  roomNo    String
+  issue     String
+  status    String   @default("PENDING")
+  date      DateTime @default(now())
+}
