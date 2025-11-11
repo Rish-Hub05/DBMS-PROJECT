@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 import NetworkService from '../../services/networkService'
 import Toast from '../../components/UI/Toast'
+import styles from './network.module.css'
 
-const badgeStyle = (status) => {
-  const base = { padding: '2px 8px', borderRadius: 12, fontSize: 12, fontWeight: 600 }
+const badgeClass = (status) => {
   switch (status) {
-    case 'OPEN': return { ...base, background: '#fff4e5', color: '#b26a00' }
-    case 'IN_PROGRESS': return { ...base, background: '#e6f4ff', color: '#074799' }
-    case 'RESOLVED': return { ...base, background: '#e8f5e9', color: '#1b5e20' }
-    case 'CANCELLED': return { ...base, background: '#ffebee', color: '#b71c1c' }
-    default: return base
+    case 'OPEN': return styles['badge-open']
+    case 'IN_PROGRESS': return styles['badge-progress']
+    case 'RESOLVED': return styles['badge-success']
+    case 'CANCELLED': return styles['badge-danger']
+    default: return ''
   }
 }
 
 const CommentCard = ({ c }) => (
-  <div style={{ background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 8 }}>
-    <div style={{ fontSize: 13, color: '#333' }}>{c.content}</div>
-    <div style={{ fontSize: 11, color: '#777', marginTop: 4 }}>{new Date(c.createdAt).toLocaleString()} • {c.author?.name || ''}</div>
+  <div className={styles.commentCard}>
+    <div className={styles.commentText}>{c.content}</div>
+    <div className={styles.commentMeta}>{new Date(c.createdAt).toLocaleString()} • {c.author?.name || ''}</div>
   </div>
 )
 
@@ -118,71 +118,71 @@ export default function StudentNetwork() {
   }
 
   return (
-    <div style={{ padding: 16 }}>
+    <div className={styles.wrap}>
       <h2>Network Issues</h2>
 
-      <div style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+      <div className={styles.card} style={{ marginBottom: 16 }}>
         <h3 style={{ marginTop: 0 }}>Report an Issue</h3>
         <form onSubmit={onSubmit}>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <div style={{ minWidth: 240, flex: 1 }}>
               <label>Title</label>
-              <input value={form.title} onChange={(e) => setForm(s => ({ ...s, title: e.target.value }))} style={{ width: '100%', padding: 8 }} required />
+              <input className={styles.input} value={form.title} onChange={(e) => setForm(s => ({ ...s, title: e.target.value }))} style={{ width: '100%' }} required />
             </div>
             <div style={{ width: 220 }}>
               <label>Type</label>
-              <select value={form.issueType} onChange={(e) => setForm(s => ({ ...s, issueType: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+              <select className={styles.input} value={form.issueType} onChange={(e) => setForm(s => ({ ...s, issueType: e.target.value }))} style={{ width: '100%' }}>
                 {['CONNECTIVITY','SPEED','AUTHENTICATION','OTHER'].map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div style={{ width: 180 }}>
               <label>Priority</label>
-              <select value={form.priority} onChange={(e) => setForm(s => ({ ...s, priority: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+              <select className={styles.input} value={form.priority} onChange={(e) => setForm(s => ({ ...s, priority: e.target.value }))} style={{ width: '100%' }}>
                 {['LOW','MEDIUM','HIGH','CRITICAL'].map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
             <label>Description</label>
-            <textarea value={form.description} onChange={(e) => setForm(s => ({ ...s, description: e.target.value }))} rows={3} style={{ width: '100%', padding: 8 }} required />
+            <textarea className={styles.input} value={form.description} onChange={(e) => setForm(s => ({ ...s, description: e.target.value }))} rows={3} style={{ width: '100%' }} required />
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 12 }}>
             <div style={{ width: 200 }}>
               <label>Location (optional)</label>
-              <input value={form.location} onChange={(e) => setForm(s => ({ ...s, location: e.target.value }))} style={{ width: '100%', padding: 8 }} />
+              <input className={styles.input} value={form.location} onChange={(e) => setForm(s => ({ ...s, location: e.target.value }))} style={{ width: '100%' }} />
             </div>
             <div style={{ width: 200 }}>
               <label>Device (optional)</label>
-              <input value={form.device} onChange={(e) => setForm(s => ({ ...s, device: e.target.value }))} style={{ width: '100%', padding: 8 }} />
+              <input className={styles.input} value={form.device} onChange={(e) => setForm(s => ({ ...s, device: e.target.value }))} style={{ width: '100%' }} />
             </div>
             <div style={{ width: 180 }}>
               <label>IP (optional)</label>
-              <input value={form.ipAddress} onChange={(e) => setForm(s => ({ ...s, ipAddress: e.target.value }))} style={{ width: '100%', padding: 8 }} placeholder="192.168.0.10" />
+              <input className={styles.input} value={form.ipAddress} onChange={(e) => setForm(s => ({ ...s, ipAddress: e.target.value }))} style={{ width: '100%' }} placeholder="192.168.0.10" />
             </div>
             <div style={{ width: 220 }}>
               <label>MAC (optional)</label>
-              <input value={form.macAddress} onChange={(e) => setForm(s => ({ ...s, macAddress: e.target.value }))} style={{ width: '100%', padding: 8 }} placeholder="AA:BB:CC:DD:EE:FF" />
+              <input className={styles.input} value={form.macAddress} onChange={(e) => setForm(s => ({ ...s, macAddress: e.target.value }))} style={{ width: '100%' }} placeholder="AA:BB:CC:DD:EE:FF" />
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
-            <button disabled={submitting} style={{ padding: '8px 12px' }}>{submitting ? 'Submitting…' : 'Report Issue'}</button>
+            <button disabled={submitting} className={styles.button}>{submitting ? 'Submitting…' : 'Report Issue'}</button>
           </div>
         </form>
       </div>
 
       {loading && <div>Loading…</div>}
-      {error && <div style={{ color: 'crimson' }}>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
 
       {!loading && !error && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 12 }}>
+        <div className={styles.grid}>
           {issues.map(issue => (
-            <div key={issue.id} style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div key={issue.id} className={styles.card}>
+              <div className={styles.cardHeader}>
                 <div style={{ fontWeight: 600 }}>{issue.title}</div>
-                <span style={badgeStyle(issue.status)}>{issue.status}</span>
+                <span className={`${styles.badge} ${badgeClass(issue.status)}`}>{issue.status}</span>
               </div>
-              <div style={{ color: '#555' }}>{issue.description}</div>
-              <div style={{ color: '#666', fontSize: 12 }}>Reported: {new Date(issue.createdAt).toLocaleString()}</div>
+              <div className={styles.muted}>{issue.description}</div>
+              <div className={styles.meta}>Reported: {new Date(issue.createdAt).toLocaleString()}</div>
 
               <div style={{ marginTop: 6 }}>
                 <div style={{ fontWeight: 600, marginBottom: 6 }}>Comments</div>
@@ -191,7 +191,7 @@ export default function StudentNetwork() {
                     <CommentCard key={c.id} c={c} />
                   ))}
                   {!comments[issue.id] && (
-                    <button onClick={() => fetchComments(issue.id)} style={{ padding: '6px 10px', alignSelf: 'start' }}>
+                    <button onClick={() => fetchComments(issue.id)} className={styles.button} style={{ alignSelf: 'start' }}>
                       {loadingComments[issue.id] ? 'Loading…' : 'Load comments'}
                     </button>
                   )}
@@ -199,20 +199,20 @@ export default function StudentNetwork() {
               </div>
 
               <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
-                <input
+                <input className={styles.input}
                   value={newComment[issue.id] || ''}
                   onChange={(e) => setNewComment(s => ({ ...s, [issue.id]: e.target.value }))}
                   placeholder="Add a comment"
-                  style={{ flex: 1, padding: 8 }}
+                  style={{ flex: 1 }}
                 />
-                <button onClick={() => addComment(issue.id)} disabled={addingComment[issue.id]} style={{ padding: '8px 12px' }}>
+                <button onClick={() => addComment(issue.id)} disabled={addingComment[issue.id]} className={styles.button}>
                   {addingComment[issue.id] ? 'Adding…' : 'Add'}
                 </button>
               </div>
             </div>
           ))}
           {issues.length === 0 && (
-            <div style={{ color: '#666' }}>No issues yet.</div>
+            <div className={styles.muted}>No issues yet.</div>
           )}
         </div>
       )}

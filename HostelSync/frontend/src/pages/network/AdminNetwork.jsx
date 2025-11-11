@@ -2,34 +2,34 @@ import { useEffect, useMemo, useState } from 'react'
 import NetworkService from '../../services/networkService'
 import Toast from '../../components/UI/Toast'
 import { getRole } from '../../services/auth'
+import styles from './network.module.css'
 
-const badgeStyle = (status) => {
-  const base = { padding: '2px 8px', borderRadius: 12, fontSize: 12, fontWeight: 600 }
+const badgeClass = (status) => {
   switch (status) {
-    case 'OPEN': return { ...base, background: '#fff4e5', color: '#b26a00' }
-    case 'IN_PROGRESS': return { ...base, background: '#e6f4ff', color: '#074799' }
-    case 'RESOLVED': return { ...base, background: '#e8f5e9', color: '#1b5e20' }
-    case 'CANCELLED': return { ...base, background: '#ffebee', color: '#b71c1c' }
-    default: return base
+    case 'OPEN': return styles['badge-open']
+    case 'IN_PROGRESS': return styles['badge-progress']
+    case 'RESOLVED': return styles['badge-success']
+    case 'CANCELLED': return styles['badge-danger']
+    default: return ''
   }
 }
 
 const CommentCard = ({ c }) => (
-  <div style={{ background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 8 }}>
-    <div style={{ fontSize: 13, color: '#333' }}>{c.content}</div>
-    <div style={{ fontSize: 11, color: '#777', marginTop: 4 }}>{new Date(c.createdAt).toLocaleString()} • {c.author?.name || ''}</div>
+  <div className={styles.commentCard}>
+    <div className={styles.commentText}>{c.content}</div>
+    <div className={styles.commentMeta}>{new Date(c.createdAt).toLocaleString()} • {c.author?.name || ''}</div>
   </div>
 )
 
 const Modal = ({ open, onClose, children, title }) => {
   if (!open) return null
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div style={{ background: '#fff', minWidth: 380, maxWidth: 700, borderRadius: 8, overflow: 'hidden' }}>
-        <div style={{ padding: 12, borderBottom: '1px solid #eee', fontWeight: 600 }}>{title}</div>
-        <div style={{ padding: 12 }}>{children}</div>
-        <div style={{ padding: 12, borderTop: '1px solid #eee', textAlign: 'right' }}>
-          <button onClick={onClose} style={{ padding: '6px 10px' }}>Close</button>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <div className={styles.modalTitle}>{title}</div>
+        <div className={styles.modalBody}>{children}</div>
+        <div className={styles.modalFooter}>
+          <button onClick={onClose} className={styles.button}>Close</button>
         </div>
       </div>
     </div>
@@ -124,45 +124,44 @@ export default function AdminNetwork() {
   const list = useMemo(() => issues, [issues])
 
   return (
-    <div style={{ padding: 16 }}>
+    <div className={styles.wrap}>
       <h2>Network Issues Management</h2>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={{ padding: 8 }}>
+      <div className={styles.actions}>
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={styles.input}>
           <option value="">All statuses</option>
           {['OPEN','IN_PROGRESS','RESOLVED','CANCELLED'].map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} style={{ padding: 8 }}>
+        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className={styles.input}>
           <option value="">All types</option>
           {['CONNECTIVITY','SPEED','AUTHENTICATION','OTHER'].map(t => <option key={t} value={t}>{t}</option>)}
         </select>
-        <button onClick={load} style={{ padding: '8px 12px' }}>Refresh</button>
+        <button onClick={load} className={styles.button}>Refresh</button>
       </div>
 
       {loading && <div>Loading…</div>}
-      {error && <div style={{ color: 'crimson' }}>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
 
       {!loading && !error && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 12 }}>
+        <div className={styles.grid}>
           {list.map(issue => (
-            <div key={issue.id} style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div key={issue.id} className={styles.card}>
+              <div className={styles.cardHeader}>
                 <div style={{ fontWeight: 600 }}>{issue.title}</div>
-                <span style={badgeStyle(issue.status)}>{issue.status}</span>
+                <span className={`${styles.badge} ${badgeClass(issue.status)}`}>{issue.status}</span>
               </div>
-              <div style={{ color: '#555' }}>{issue.description}</div>
-              <div style={{ color: '#666', fontSize: 12 }}>Reported: {new Date(issue.createdAt).toLocaleString()}</div>
+              <div className={styles.muted}>{issue.description}</div>
+              <div className={styles.meta}>Reported: {new Date(issue.createdAt).toLocaleString()}</div>
               <div style={{ marginTop: 6 }}>
                 <div style={{ fontWeight: 600, marginBottom: 6 }}>Comments</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {/* Comments will be shown in modal for full view */}
-                  <button onClick={() => openUpdate(issue)} style={{ padding: '6px 10px', alignSelf: 'start' }}>Open</button>
+                  <button onClick={() => openUpdate(issue)} className={styles.button} style={{ alignSelf: 'start' }}>Open</button>
                 </div>
               </div>
             </div>
           ))}
           {list.length === 0 && (
-            <div style={{ color: '#666' }}>No issues found.</div>
+            <div className={styles.muted}>No issues found.</div>
           )}
         </div>
       )}
@@ -173,14 +172,14 @@ export default function AdminNetwork() {
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <div style={{ minWidth: 200, flex: 1 }}>
                 <label>Status</label>
-                <select value={updateForm.status} onChange={(e) => setUpdateForm(s => ({ ...s, status: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+                <select value={updateForm.status} onChange={(e) => setUpdateForm(s => ({ ...s, status: e.target.value }))} className={styles.input} style={{ width: '100%' }}>
                   {['OPEN','IN_PROGRESS','RESOLVED','CANCELLED'].map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               {role === 'admin' && (
                 <div style={{ minWidth: 200, flex: 1 }}>
                   <label>Assign to IT staff</label>
-                  <select value={updateForm.assignedToId} onChange={(e) => setUpdateForm(s => ({ ...s, assignedToId: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+                  <select value={updateForm.assignedToId} onChange={(e) => setUpdateForm(s => ({ ...s, assignedToId: e.target.value }))} className={styles.input} style={{ width: '100%' }}>
                     <option value="">Not assigned</option>
                     {itStaff.map(u => (
                       <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
@@ -192,7 +191,7 @@ export default function AdminNetwork() {
 
             <div style={{ marginTop: 12 }}>
               <label>Maintenance Note (adds comment)</label>
-              <textarea value={maintenanceNote} onChange={(e) => setMaintenanceNote(e.target.value)} rows={3} style={{ width: '100%', padding: 8 }} placeholder="What did you check/fix?" />
+              <textarea value={maintenanceNote} onChange={(e) => setMaintenanceNote(e.target.value)} rows={3} className={styles.input} style={{ width: '100%' }} placeholder="What did you check/fix?" />
             </div>
 
             <div style={{ marginTop: 12 }}>
@@ -202,13 +201,13 @@ export default function AdminNetwork() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 220, overflow: 'auto' }}>
                   {comments.map(c => <CommentCard key={c.id} c={c} />)}
-                  {comments.length === 0 && <div style={{ color: '#777' }}>No comments yet.</div>}
+                  {comments.length === 0 && <div className={styles.muted}>No comments yet.</div>}
                 </div>
               )}
             </div>
 
             <div style={{ marginTop: 12, textAlign: 'right' }}>
-              <button disabled={pending} style={{ padding: '8px 12px' }}>{pending ? 'Saving…' : 'Save'}</button>
+              <button disabled={pending} className={styles.button}>{pending ? 'Saving…' : 'Save'}</button>
             </div>
           </form>
         )}

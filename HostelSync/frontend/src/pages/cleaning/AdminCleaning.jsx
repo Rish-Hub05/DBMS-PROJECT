@@ -1,28 +1,28 @@
 import { useEffect, useMemo, useState } from 'react'
 import CleaningService from '../../services/cleaningService'
 import Toast from '../../components/UI/Toast'
+import styles from './cleaning.module.css'
 
-const badgeStyle = (status) => {
-  const base = { padding: '2px 8px', borderRadius: 12, fontSize: 12, fontWeight: 600 }
+const badgeClass = (status) => {
   switch (status) {
-    case 'PENDING': return { ...base, background: '#fff4e5', color: '#b26a00' }
-    case 'ASSIGNED': return { ...base, background: '#ede7f6', color: '#4527a0' }
-    case 'IN_PROGRESS': return { ...base, background: '#e6f4ff', color: '#074799' }
-    case 'COMPLETED': return { ...base, background: '#e8f5e9', color: '#1b5e20' }
-    case 'CANCELLED': return { ...base, background: '#ffebee', color: '#b71c1c' }
-    default: return base
+    case 'PENDING': return styles['badge-pending']
+    case 'ASSIGNED': return styles['badge-assigned']
+    case 'IN_PROGRESS': return styles['badge-progress']
+    case 'COMPLETED': return styles['badge-completed']
+    case 'CANCELLED': return styles['badge-cancelled']
+    default: return ''
   }
 }
 
 const Modal = ({ open, onClose, children, title }) => {
   if (!open) return null
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div style={{ background: '#fff', minWidth: 380, maxWidth: 640, borderRadius: 8, overflow: 'hidden' }}>
-        <div style={{ padding: 12, borderBottom: '1px solid #eee', fontWeight: 600 }}>{title}</div>
-        <div style={{ padding: 12 }}>{children}</div>
-        <div style={{ padding: 12, borderTop: '1px solid #eee', textAlign: 'right' }}>
-          <button onClick={onClose} style={{ padding: '6px 10px' }}>Close</button>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <div className={styles.modalTitle}>{title}</div>
+        <div className={styles.modalBody}>{children}</div>
+        <div className={styles.modalFooter}>
+          <button onClick={onClose} className={styles.button}>Close</button>
         </div>
       </div>
     </div>
@@ -107,56 +107,56 @@ export default function AdminCleaning() {
   const list = useMemo(() => requests, [requests])
 
   return (
-    <div style={{ padding: 16 }}>
+    <div className={styles.wrap}>
       <h2>Cleaning Management</h2>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
-        <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ padding: 8 }}>
+      <div className={styles.actions}>
+        <select value={status} onChange={(e) => setStatus(e.target.value)} className={styles.input}>
           <option value="">All statuses</option>
           {['PENDING','ASSIGNED','IN_PROGRESS','COMPLETED','CANCELLED'].map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <input value={building} onChange={(e) => setBuilding(e.target.value)} placeholder="Filter building" style={{ padding: 8 }} />
-        <select value={cleanerId} onChange={(e) => setCleanerId(e.target.value)} style={{ padding: 8 }}>
+        <input value={building} onChange={(e) => setBuilding(e.target.value)} placeholder="Filter building" className={styles.input} />
+        <select value={cleanerId} onChange={(e) => setCleanerId(e.target.value)} className={styles.input}>
           <option value="">Any cleaner</option>
           {cleaners.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
-        <button onClick={load} style={{ padding: '8px 12px' }}>Refresh</button>
+        <button onClick={load} className={styles.button}>Refresh</button>
       </div>
 
       {loading && <div>Loading…</div>}
-      {error && <div style={{ color: 'crimson' }}>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
 
       {!loading && !error && (
-        <div className="table-wrap" style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead className={styles.thead}>
               <tr>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>When</th>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>Student</th>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>Location</th>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>Type</th>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>Cleaner</th>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>Status</th>
-                <th style={{ textAlign: 'left', padding: 8, borderBottom: '1px solid #eee' }}>Actions</th>
+                <th>When</th>
+                <th>Student</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Cleaner</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {list.map(req => (
                 <tr key={req.id}>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}>{new Date(req.scheduledDate).toLocaleString()}</td>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}>{req.student?.name}</td>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}>{req.building}, Room {req.room}</td>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}>{req.cleaningType}</td>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}>{req.cleaner?.name || '—'}</td>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}><span style={badgeStyle(req.status)}>{req.status}</span></td>
-                  <td style={{ padding: 8, borderBottom: '1px solid #f3f3f3' }}>
-                    <button onClick={() => openUpdate(req)} style={{ padding: '6px 10px' }}>Details</button>
+                  <td className={styles.td}>{new Date(req.scheduledDate).toLocaleString()}</td>
+                  <td className={styles.td}>{req.student?.name}</td>
+                  <td className={styles.td}>{req.building}, Room {req.room}</td>
+                  <td className={styles.td}>{req.cleaningType}</td>
+                  <td className={styles.td}>{req.cleaner?.name || '—'}</td>
+                  <td className={styles.td}><span className={`${styles.badge} ${badgeClass(req.status)}`}>{req.status}</span></td>
+                  <td className={styles.td}>
+                    <button onClick={() => openUpdate(req)} className={styles.button}>Details</button>
                   </td>
                 </tr>
               ))}
               {list.length === 0 && (
                 <tr>
-                  <td colSpan={7} style={{ padding: 12, textAlign: 'center', color: '#666' }}>No requests</td>
+                  <td colSpan={7} className={styles.td} style={{ textAlign: 'center' }}><span className={styles.muted}>No requests</span></td>
                 </tr>
               )}
             </tbody>
@@ -169,28 +169,28 @@ export default function AdminCleaning() {
           <div>
             <div style={{ marginBottom: 12 }}>
               <div style={{ fontWeight: 600, fontSize: 16 }}>{selected.cleaningType} Cleaning</div>
-              <div style={{ color: '#666' }}>{selected.building}, Room {selected.room}</div>
-              <div style={{ color: '#888', fontSize: 13 }}>Scheduled: {new Date(selected.scheduledDate).toLocaleString()}</div>
-              <div style={{ color: '#888', fontSize: 13 }}>Student: {selected.student?.name} ({selected.student?.roomNo})</div>
+              <div className={styles.muted}>{selected.building}, Room {selected.room}</div>
+              <div className={styles.meta}>Scheduled: {new Date(selected.scheduledDate).toLocaleString()}</div>
+              <div className={styles.meta}>Student: {selected.student?.name} ({selected.student?.roomNo})</div>
             </div>
             <form onSubmit={onUpdate}>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ minWidth: 200, flex: 1 }}>
                   <label>Status</label>
-                  <select value={updateForm.status} onChange={(e) => setUpdateForm(s => ({ ...s, status: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+                  <select value={updateForm.status} onChange={(e) => setUpdateForm(s => ({ ...s, status: e.target.value }))} className={styles.input} style={{ width: '100%' }}>
                     {['PENDING','ASSIGNED','IN_PROGRESS','COMPLETED','CANCELLED'].map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div style={{ minWidth: 200, flex: 1 }}>
                   <label>Assign Cleaner</label>
-                  <select value={updateForm.cleanerId} onChange={(e) => setUpdateForm(s => ({ ...s, cleanerId: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+                  <select value={updateForm.cleanerId} onChange={(e) => setUpdateForm(s => ({ ...s, cleanerId: e.target.value }))} className={styles.input} style={{ width: '100%' }}>
                     <option value="">Unassigned</option>
                     {cleaners.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
               </div>
               <div style={{ marginTop: 12, textAlign: 'right' }}>
-                <button disabled={updating} style={{ padding: '8px 12px' }}>{updating ? 'Saving…' : 'Save'}</button>
+                <button disabled={updating} className={styles.button}>{updating ? 'Saving…' : 'Save'}</button>
               </div>
             </form>
           </div>

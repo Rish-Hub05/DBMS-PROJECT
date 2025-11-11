@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import AccountService from '../services/accountService'
 import { clearToken } from '../services/auth'
 import Toast from '../components/UI/Toast'
+import styles from './profile.module.css'
 
 export default function Profile() {
   const [me, setMe] = useState(null)
@@ -88,68 +89,68 @@ export default function Profile() {
   }
 
   return (
-    <div style={{ padding: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#eceff1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#455a64' }}>{initials}</div>
+    <div className={styles.wrap}>
+      <div className={styles.header}>
+        <div className={styles.user}>
+          <div className={styles.avatar}>{initials}</div>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 600 }}>{me?.name || '—'}</div>
-            <div style={{ fontSize: 13, color: '#666' }}>{me?.email}</div>
+            <div className={styles.name}>{me?.name || '—'}</div>
+            <div className={styles.meta}>{me?.email}</div>
           </div>
         </div>
-        <button onClick={logout} style={{ padding: '8px 12px' }}>Logout</button>
+        <button onClick={logout} className={styles.logout}>Logout</button>
       </div>
 
       {loading && <div>Loading…</div>}
-      {error && <div style={{ color: 'crimson' }}>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
 
       {!loading && !error && (
-        <div style={{ display: 'grid', gap: 16, gridTemplateColumns: '1fr', maxWidth: 720 }}>
-          <div style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 16 }}>
-            <div style={{ fontWeight: 600, marginBottom: 12 }}>Profile</div>
+        <div className={styles.grid}>
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Profile</div>
             <form onSubmit={onSave}>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ minWidth: 260, flex: 1 }}>
+              <div className={styles.formRow}>
+                <div className={styles.field}>
                   <label>Name</label>
-                  <input value={form.name} onChange={(e) => setForm(s => ({ ...s, name: e.target.value }))} style={{ width: '100%', padding: 8 }} required />
+                  <input className={styles.input} value={form.name} onChange={(e) => setForm(s => ({ ...s, name: e.target.value }))} required />
                 </div>
-                <div style={{ minWidth: 260, flex: 1 }}>
+                <div className={styles.field}>
                   <label>Phone</label>
-                  <input value={form.phone} onChange={(e) => setForm(s => ({ ...s, phone: e.target.value }))} style={{ width: '100%', padding: 8 }} placeholder="Optional" />
+                  <input className={styles.input} value={form.phone} onChange={(e) => setForm(s => ({ ...s, phone: e.target.value }))} placeholder="Optional" />
                 </div>
-                <div style={{ minWidth: 260, flex: 1 }}>
+                <div className={styles.field}>
                   <label>Role</label>
-                  <input value={me?.role || ''} readOnly style={{ width: '100%', padding: 8, background: '#fafafa' }} />
+                  <input className={styles.input} value={me?.role || ''} readOnly />
                 </div>
               </div>
-              <div style={{ marginTop: 12 }}>
-                <button disabled={saving} style={{ padding: '8px 12px' }}>{saving ? 'Saving…' : 'Save Changes'}</button>
+              <div className={styles.actions}>
+                <button className={styles.button} disabled={saving}>{saving ? 'Saving…' : 'Save Changes'}</button>
               </div>
             </form>
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 16 }}>
-            <div style={{ fontWeight: 600, marginBottom: 12 }}>Change Password</div>
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Change Password</div>
             <form onSubmit={onChangePassword}>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ minWidth: 240, flex: 1 }}>
+              <div className={styles.formRow}>
+                <div className={styles.field}>
                   <label>Current Password</label>
-                  <input type="password" value={pwd.currentPassword} onChange={(e) => setPwd(s => ({ ...s, currentPassword: e.target.value }))} style={{ width: '100%', padding: 8 }} />
+                  <input className={styles.input} type="password" value={pwd.currentPassword} onChange={(e) => setPwd(s => ({ ...s, currentPassword: e.target.value }))} />
                 </div>
-                <div style={{ minWidth: 240, flex: 1 }}>
+                <div className={styles.field}>
                   <label>New Password</label>
-                  <input type="password" value={pwd.newPassword} onChange={(e) => setPwd(s => ({ ...s, newPassword: e.target.value }))} style={{ width: '100%', padding: 8 }} />
+                  <input className={styles.input} type="password" value={pwd.newPassword} onChange={(e) => setPwd(s => ({ ...s, newPassword: e.target.value }))} />
                 </div>
-                <div style={{ minWidth: 240, flex: 1 }}>
+                <div className={styles.field}>
                   <label>Confirm Password</label>
-                  <input type="password" value={pwd.confirm} onChange={(e) => setPwd(s => ({ ...s, confirm: e.target.value }))} style={{ width: '100%', padding: 8 }} />
+                  <input className={styles.input} type="password" value={pwd.confirm} onChange={(e) => setPwd(s => ({ ...s, confirm: e.target.value }))} />
                 </div>
               </div>
-              <div style={{ marginTop: 12 }}>
-                <button disabled={changing} style={{ padding: '8px 12px' }}>{changing ? 'Saving…' : 'Change Password'}</button>
+              <div className={styles.actions}>
+                <button className={styles.button} disabled={changing}>{changing ? 'Saving…' : 'Change Password'}</button>
               </div>
             </form>
-            <div style={{ marginTop: 8, color: '#777', fontSize: 12 }}>If your server does not support password changes, a helpful message will be shown.</div>
+            <div className={styles.hint}>If your server does not support password changes, a helpful message will be shown.</div>
           </div>
         </div>
       )}

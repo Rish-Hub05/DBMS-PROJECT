@@ -1,7 +1,8 @@
 .layout { display: flex; flex-direction: column; height: 100vh; }
 .body { display: flex; flex: 1; padding-top: 56px; }
-.main { flex: 1; background: var(--color-background); padding: var(--space-6); overflow: auto; }
-.contentWrap { background: #ffffff; color: #0f172a; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 10px 15px -3px rgba(0,0,0,0.05); padding: var(--space-6); min-height: calc(100vh - 56px - var(--space-6)*2); }
+.main { flex: 1; background: var(--color-bg); padding: var(--space-6); overflow: auto; }
+.contentWrap { background: var(--color-surface); color: var(--color-text); border-radius: var(--radius-lg); box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 10px 15px -3px rgba(0,0,0,0.05); padding: var(--space-6); min-height: calc(100vh - 56px - var(--space-6)*2); max-width: 1720px; margin: 0 auto; }
+.contentWrapFull { max-width: none; width: 100%; border-radius: 0; box-shadow: none; margin: 0; }
 
 @media (max-width: 768px) {
   .main { padding: var(--space-4); }

@@ -1,0 +1,18 @@
+.wrap { padding: var(--space-4); }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+.user { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 48px; height: 48px; border-radius: 50%; background: color-mix(in oklab, var(--color-text) 8%, var(--color-surface)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: color-mix(in oklab, var(--color-text) 60%, var(--color-bg)); }
+.name { font-size: 18px; font-weight: 600; color: var(--color-text); }
+.meta { font-size: 13px; color: var(--color-muted); }
+.logout { padding: 8px 12px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; }
+
+.grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; max-width: 720px; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-4); color: var(--color-text); }
+.cardTitle { font-weight: 600; margin-bottom: 12px; }
+.formRow { display: flex; gap: 12px; flex-wrap: wrap; }
+.field { min-width: 260px; flex: 1; }
+.input { width: 100%; padding: 8px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); }
+.input[readonly] { background: color-mix(in oklab, var(--color-text) 4%, var(--color-surface)); }
+.actions { margin-top: 12px; }
+.button { padding: 8px 12px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; }
+.hint { margin-top: 8px; color: var(--color-muted); font-size: 12px; }

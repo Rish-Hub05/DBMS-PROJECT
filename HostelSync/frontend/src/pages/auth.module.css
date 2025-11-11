@@ -1,13 +1,131 @@
-.centerWrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-8) var(--space-4); }
-.card { width: 100%; max-width: 420px; background: #ffffff; color: #0f172a; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); padding: var(--space-8); }
-.brand { text-align: center; font-weight: 800; color: var(--color-primary); font-size: 20px; margin-bottom: var(--space-2); }
-.title { text-align: center; margin-bottom: var(--space-6); }
-.form { display: flex; flex-direction: column; gap: var(--space-4); }
-.label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; color: #111827; }
-.input { padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; color: #111827; }
-.input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.15); }
-.submit { background: var(--color-primary); color: #fff; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-.submit[disabled] { opacity: 0.8; cursor: not-allowed; }
-.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; padding: 8px 12px; border-radius: 8px; margin-bottom: var(--space-4); font-size: 14px; }
-.fieldError { color: #dc2626; font-size: 12px; margin-top: 4px; }
-.alt { margin-top: var(--space-4); font-size: 14px; text-align: center; }
+.centerWrap {
+  height: 100vh; /* full viewport height */
+  width: 100vw;  /* full viewport width */
+  display: flex;
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  background: linear-gradient(135deg, #eef2ff 0%, #f9fafc 100%);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Card Styling */
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Brand / Title */
+.brand {
+  text-align: center;
+  font-weight: 800;
+  color: var(--color-primary);
+  font-size: 24px;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Form elements */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 15px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Button */
+.submit {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submit:hover:not([disabled]) {
+  background: color-mix(in oklab, var(--color-primary) 80%, #000);
+  transform: translateY(-2px);
+}
+
+.submit[disabled] {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* Errors */
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.fieldError {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Link */
+.alt {
+  margin-top: 1rem;
+  font-size: 14px;
+  text-align: center;
+  color: #444;
+}
+
+.alt a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.alt a:hover {
+  text-decoration: underline;
+}

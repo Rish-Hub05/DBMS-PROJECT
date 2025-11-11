@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import WaterService from '../../services/waterService'
 import Toast from '../../components/UI/Toast'
+import styles from './water.module.css'
 
-const badgeStyle = (status) => {
-  const base = { padding: '2px 8px', borderRadius: 12, fontSize: 12, fontWeight: 600 }
+const badgeClass = (status) => {
   switch (status) {
-    case 'PENDING': return { ...base, background: '#fff4e5', color: '#b26a00' }
-    case 'IN_PROGRESS': return { ...base, background: '#e6f4ff', color: '#074799' }
-    case 'RESOLVED': return { ...base, background: '#e8f5e9', color: '#1b5e20' }
-    case 'CANCELLED': return { ...base, background: '#ffebee', color: '#b71c1c' }
-    default: return base
+    case 'PENDING': return styles['badge-open']
+    case 'IN_PROGRESS': return styles['badge-progress']
+    case 'RESOLVED': return styles['badge-success']
+    case 'CANCELLED': return styles['badge-danger']
+    default: return ''
   }
 }
 
@@ -70,59 +70,59 @@ export default function StudentWater() {
   }
 
   return (
-    <div style={{ padding: 16 }}>
+    <div className={styles.wrap}>
       <h2>Water Issues</h2>
 
-      <div style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+      <div className={styles.card} style={{ marginBottom: 16 }}>
         <h3 style={{ marginTop: 0 }}>Report an Issue</h3>
         <form onSubmit={onSubmit}>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: 240 }}>
               <label>Title</label>
-              <input value={form.title} onChange={(e) => setForm(s => ({ ...s, title: e.target.value }))} style={{ width: '100%', padding: 8 }} required />
+              <input className={styles.input} value={form.title} onChange={(e) => setForm(s => ({ ...s, title: e.target.value }))} style={{ width: '100%' }} required />
             </div>
             <div style={{ flex: 1, minWidth: 240 }}>
               <label>Location</label>
-              <input value={form.location} onChange={(e) => setForm(s => ({ ...s, location: e.target.value }))} style={{ width: '100%', padding: 8 }} required />
+              <input className={styles.input} value={form.location} onChange={(e) => setForm(s => ({ ...s, location: e.target.value }))} style={{ width: '100%' }} required />
             </div>
             <div style={{ width: 180 }}>
               <label>Priority</label>
-              <select value={form.priority} onChange={(e) => setForm(s => ({ ...s, priority: e.target.value }))} style={{ width: '100%', padding: 8 }}>
+              <select className={styles.input} value={form.priority} onChange={(e) => setForm(s => ({ ...s, priority: e.target.value }))} style={{ width: '100%' }}>
                 {['LOW','MEDIUM','HIGH','URGENT'].map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
             <label>Description</label>
-            <textarea value={form.description} onChange={(e) => setForm(s => ({ ...s, description: e.target.value }))} rows={3} style={{ width: '100%', padding: 8 }} required />
+            <textarea className={styles.input} value={form.description} onChange={(e) => setForm(s => ({ ...s, description: e.target.value }))} rows={3} style={{ width: '100%' }} required />
           </div>
           <div style={{ marginTop: 12 }}>
-            <button disabled={submitting} style={{ padding: '8px 12px' }}>{submitting ? 'Submitting…' : 'Report Issue'}</button>
+            <button disabled={submitting} className={styles.button}>{submitting ? 'Submitting…' : 'Report Issue'}</button>
           </div>
         </form>
       </div>
 
       {loading && <div>Loading…</div>}
-      {error && <div style={{ color: 'crimson' }}>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
 
       {!loading && !error && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+        <div className={styles.grid}>
           {issues.map(issue => (
-            <div key={issue.id} style={{ background: '#fff', border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div key={issue.id} className={styles.card}>
+              <div className={styles.cardHeader}>
                 <div style={{ fontWeight: 600 }}>{issue.title}</div>
-                <span style={badgeStyle(issue.status)}>{issue.status}</span>
+                <span className={`${styles.badge} ${badgeClass(issue.status)}`}>{issue.status}</span>
               </div>
-              <div style={{ color: '#555', marginTop: 6 }}>{issue.description}</div>
-              <div style={{ color: '#666', fontSize: 13, marginTop: 6 }}>Location: {issue.location}</div>
+              <div className={styles.muted} style={{ marginTop: 6 }}>{issue.description}</div>
+              <div className={styles.meta} style={{ marginTop: 6 }}>Location: {issue.location}</div>
               {Array.isArray(issue.images) && issue.images.length > 0 && (
-                <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>Images: {issue.images.length}</div>
+                <div className={styles.meta} style={{ marginTop: 8, fontSize: 12 }}>Images: {issue.images.length}</div>
               )}
-              <div style={{ marginTop: 8, fontSize: 12, color: '#888' }}>Reported: {new Date(issue.createdAt).toLocaleString()}</div>
+              <div className={styles.meta} style={{ marginTop: 8 }}>Reported: {new Date(issue.createdAt).toLocaleString()}</div>
             </div>
           ))}
           {issues.length === 0 && (
-            <div style={{ color: '#666' }}>No issues reported yet.</div>
+            <div className={styles.muted}>No issues reported yet.</div>
           )}
         </div>
       )}

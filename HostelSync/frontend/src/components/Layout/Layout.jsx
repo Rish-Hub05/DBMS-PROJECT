@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import styles from './Layout.module.css'
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false)
+  const location = useLocation()
+  const isDashboard = location.pathname.startsWith('/dashboard')
 
   return (
     <div className={styles.layout}>
@@ -13,7 +15,7 @@ export default function Layout() {
       <div className={styles.body}>
         <Sidebar collapsed={collapsed} />
         <main className={styles.main}>
-          <div className={styles.contentWrap}>
+          <div className={`${styles.contentWrap} ${isDashboard ? styles.contentWrapFull : ''}`}>
             <Outlet />
           </div>
         </main>

@@ -1,15 +1,15 @@
 :root {
-  --bg: #ffffff;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --primary: #2563eb;
-  --primary-600: #1d4ed8;
-  --primary-700: #1e40af;
+  --bg: var(--color-bg);
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --primary: var(--color-primary);
+  --primary-600: color-mix(in oklab, var(--color-primary) 90%, black);
+  --primary-700: color-mix(in oklab, var(--color-primary) 80%, black);
   --danger: #dc2626;
   --success: #16a34a;
   --warning: #d97706;
-  --border: #e5e7eb;
-  --card: #ffffff;
+  --border: var(--color-border);
+  --card: var(--color-card);
 }
 
 /* Spacing utilities */
