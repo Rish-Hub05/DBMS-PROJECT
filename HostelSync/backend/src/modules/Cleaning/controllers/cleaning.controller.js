@@ -133,6 +133,11 @@ const getAllCleaningRequests = async (req, res) => {
     if (cleanerId) where.cleanerId = parseInt(cleanerId);
     if (building) where.building = building;
 
+    // Cleaners should only see their assigned requests
+    if (req.user.role === 'CLEANER') {
+      where.cleanerId = req.user.id;
+    }
+
     const requests = await prisma.cleaningRequest.findMany({
       where,
       orderBy: { scheduledDate: 'asc' },
